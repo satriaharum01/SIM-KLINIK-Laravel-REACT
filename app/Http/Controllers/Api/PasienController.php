@@ -18,7 +18,7 @@ class PasienController extends Controller
             'name' => 'required|string|max:255',
             'address' => 'required|string|max:255',
             'phone_number' => 'required|string|max:15',
-            'gender' => 'required|in:male,female',
+            'gender' => 'required|in:Male,Female',
             'date_of_birth' => 'required|date',
         ]);
 
@@ -36,6 +36,34 @@ class PasienController extends Controller
         ]);
 
         return response()->json(['message' => 'Pasien created successfully', 'user' => $user], 201);
+    }
+
+    public function update(Request $request, $id)
+    {
+        // Validate the incoming request
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'address' => 'required|string|max:255',
+            'phone_number' => 'required|string|max:15',
+            'gender' => 'required|in:Male,Female',
+            'date_of_birth' => 'required|date',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 400);
+        }
+
+        // Create the user
+        $user = Pasien::where('id', $id)
+            ->update([
+            'name' => $request->name,
+            'address' => $request->address,
+            'phone_number' => $request->phone_number,
+            'gender' => $request->gender,
+            'date_of_birth' => $request->date_of_birth,
+        ]);
+
+        return response()->json(['message' => 'Pasien update successfully', 'user' => $user], 201);
     }
 
     public function delete($id)
