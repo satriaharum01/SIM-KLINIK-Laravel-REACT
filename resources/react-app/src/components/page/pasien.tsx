@@ -4,7 +4,7 @@ import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import { useNavigate } from 'react-router-dom';
 import { Modal, Button, Form } from "react-bootstrap";
-import Api from "../../api";
+import Api from '../../api';
 import DataTable from "datatables.net-react";
 import DT from "datatables.net-bs5";
 
@@ -53,8 +53,7 @@ const Pasien = () => {
     //useNavigate
     const navigate = useNavigate();
     //method store post
-    const storePost = async (e) => {
-        e.preventDefault();
+    const storePost = async (e: { preventDefault: () => void; }) => {
         //send data with API
         await Api.post('/api/data/pasien/store', formData)
             .then(() => {
@@ -68,15 +67,15 @@ const Pasien = () => {
                     timer: 2000
                 });
                 AddhandleClose();
-                setFormData({});
+                setFormData(null);
                 setPatients([]);
                 fetchPatients();
 
             }).catch(error => {
 
                 const errorMessages = Object.values(error.response.data)
-                        .flat()  // Flatten to handle arrays of messages
-                        .join('<br>'); // Join with a line break for readability
+                    .flat()  // Flatten to handle arrays of messages
+                    .join('<br>'); // Join with a line break for readability
 
                 withReactContent(Swal).fire({
                     title: "Error!",
@@ -89,7 +88,7 @@ const Pasien = () => {
         console.log('Data yang dikirim:', formData);
     };
 
-    const updatePost = async (e) => {
+    const updatePost = async (e: { preventDefault: () => void; }) => {
         e.preventDefault();
         //send data with API
         await Api.patch(`/api/data/pasien/update/${formData.id}`, formData)
@@ -101,7 +100,6 @@ const Pasien = () => {
                     title: "Data Tersimpan!",
                     text: "Data telah berhasil diupdate!",
                     icon: "success",
-                    showSpinner: true,
                     timer: 2000
                 });
                 handleClose();
@@ -111,8 +109,8 @@ const Pasien = () => {
 
             }).catch(error => {
                 const errorMessages = Object.values(error.response.data)
-                        .flat()  // Flatten to handle arrays of messages
-                        .join('<br>'); // Join with a line break for readability
+                    .flat()  // Flatten to handle arrays of messages
+                    .join('<br>'); // Join with a line break for readability
 
                 withReactContent(Swal).fire({
                     title: "Error!",
@@ -123,7 +121,7 @@ const Pasien = () => {
                 setErrors(error.response.data);
             })
     }
-    const deletePost = async (id) => {
+    const deletePost = async (id: any) => {
         //delete with api
         await Api.delete(`/api/data/pasien/delete/${id}`)
             .then(() => {
@@ -133,9 +131,9 @@ const Pasien = () => {
             })
     }
     // Handle click untuk menampilkan modal Edit
-    const handleEditClick = (patient) => {
-        setSelectedPatient(patient);
-        setFormData(patient);
+    const handleEditClick = (patients) => {
+        setSelectedPatient(patients);
+        setFormData(patients);
         console.log(formData);
         setShowModal(true);
     };
@@ -155,7 +153,7 @@ const Pasien = () => {
         setShowAddModal(false);
     };
 
-    const formhandleChange = (e) => {
+    const formhandleChange = (e: { target: { name: any; value: any; }; }) => {
         setFormData({
             ...formData,
             [e.target.name]: e.target.value
@@ -201,7 +199,7 @@ const Pasien = () => {
             data: "id",
             className: "text-center",
             sortable: true,
-            render: function (data) {
+            render: function (data: string) {
                 return '<button class="btn btn-success btn-edit" data-id="' + data + '" > <i class="bi bi-pencil-square"></i></button>\
                 <button class="btn btn-danger btn-hapus" data-id="' + data + '" > <i class="bi bi-trash"></i></button>';
             },
